@@ -405,9 +405,23 @@
             "滑雪準備": ["雪鏡", "排汗衣", "保暖長袖", "手套", "長襪", "防滑鞋", "屁墊", "暖暖包", "護膝", "護手", "冰爪"]
         };
         
+        // --- UPDATED FOOD DATA ---
         const foodData = [
-            { day: "D1 (3/3) 仙台", spots: [{ name: "肉十八", type: "晚餐", address: "Sendai", note: "燒肉" }]},
-            { day: "D2 (3/4) 山形", spots: [{ name: "酒菜一", type: "晚餐", address: "1 Chome-7-7 Kasumicho, Yamagata", tel:"+815054841844", note: "" }, { name: "山形肉問屋センター", type: "晚餐", address: "Yamagata, Saiwaicho, 1−4 駅南ビル 1F", tel:"+817011455641", note: "" }]}
+            { 
+                day: "D1 (3/3) 仙台", 
+                spots: [
+                    { name: "肉十八", type: "晚餐", address: "Sendai", note: "燒肉" }
+                ]
+            },
+            { 
+                day: "D2 (3/4) 山形", 
+                spots: [
+                    { name: "酒菜一", type: "晚餐", address: "1 Chome-7-7 Kasumicho, Yamagata", tel:"+815054841844", note: "居酒屋" }, 
+                    { name: "山形肉問屋センター", type: "晚餐", address: "Yamagata, Saiwaicho, 1−4 駅南ビル 1F", tel:"+817011455641", note: "燒肉" },
+                    { name: "Suzuran", type: "晚餐", address: "Yamagata", tel:"+81236422911", note: "洋食/酒吧" },
+                    { name: "International Café & Bar, ISLAND PEAK", type: "晚餐", address: "Yamagata", tel:"+81236767885", note: "酒吧" }
+                ]
+            }
         ];
 
         // --- Core Logic ---
@@ -596,7 +610,11 @@
             event.currentTarget.classList.remove('text-muji-secondary'); event.currentTarget.classList.add('text-muji-accent');
             window.scrollTo(0,0);
         }
-        function openMap(address) { if(!address) return; window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`, '_blank'); }
+        // Updated Map Function to standard Google Maps Search for better compatibility
+        function openMap(address) { 
+            if(!address) return; 
+            window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(address), '_blank'); 
+        }
         function openWeather(loc) { window.open(`https://www.google.com/search?q=weather+${loc}+japan`, '_blank'); }
         function loadCover() { const s = localStorage.getItem('family_trip_cover'); if(s) document.getElementById('cover-area').style.backgroundImage = `url(${s})`; }
         function changeCover(input) { if (input.files && input.files[0]) { const r = new FileReader(); r.onload = function (e) { const img = new Image(); img.src = e.target.result; img.onload = function() { const c = document.createElement('canvas'); const ctx = c.getContext('2d'); const s = 800/img.width; c.width = 800; c.height = img.height * s; ctx.drawImage(img, 0, 0, canvas.width, canvas.height); const d = c.toDataURL('image/jpeg', 0.7); document.getElementById('cover-area').style.backgroundImage = `url(${d})`; localStorage.setItem('family_trip_cover', d); }}; r.readAsDataURL(input.files[0]); }}
