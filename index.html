@@ -6,9 +6,7 @@
     <title>仙台自駕遊 2026</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <script>
@@ -194,17 +192,14 @@
         </div>
         
         <div id="page-plan" class="page-container active">
-            
             <div class="sticky-header">
                 <div class="day-tabs-container no-scrollbar" id="dayTabs"></div>
                 <div class="text-center text-[10px] text-white/50 pb-1 cursor-pointer" onclick="window.scrollTo(0,0)">
                     <i class="fa-solid fa-caret-up"></i> 點擊天數切換
                 </div>
             </div>
-
             <div class="px-4 mt-4">
                 <div id="day-content" class="min-h-[50vh] pb-6"></div>
-
                 <div class="mb-6 pt-4 border-t border-gray-200">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="font-bold text-lg text-muji-accent"><i class="fa-solid fa-images"></i> 旅途相簿</h3>
@@ -213,11 +208,9 @@
                             <input type="file" accept="image/*" multiple class="hidden" onchange="handleAddDayPhotos(this)">
                         </label>
                     </div>
-                    <div id="day-gallery-grid" class="grid grid-cols-3 gap-2">
-                        </div>
+                    <div id="day-gallery-grid" class="grid grid-cols-3 gap-2"></div>
                     <p class="text-[10px] text-gray-400 mt-2 text-center">照片儲存於手機瀏覽器中</p>
                 </div>
-
                 <div class="flex justify-between mb-8 pt-4 border-t border-gray-200">
                     <button onclick="changeDayOffset(-1)" id="btnPrev" class="text-muji-secondary px-4 py-3 bg-white border border-gray-200 rounded-lg shadow-sm disabled:opacity-30 flex items-center transition-transform active:scale-95">
                         <i class="fa-solid fa-chevron-left mr-2"></i> 上一天
@@ -280,29 +273,32 @@
                 <button onclick="switchListTab('memo')" class="list-tab-btn px-4 py-2 rounded-full text-sm font-bold border border-muji-border bg-white text-gray-500">備忘錄</button>
                 <button onclick="switchListTab('shop')" class="list-tab-btn px-4 py-2 rounded-full text-sm font-bold border border-muji-border bg-white text-gray-500">購買清單</button>
             </div>
+            
             <div id="list-packing" class="list-content"></div>
+            
             <div id="list-memo" class="list-content hidden">
                 <textarea id="memoInput" class="muji-input h-32 mb-2" placeholder="輸入備忘事項..."></textarea>
                 <button onclick="saveMemo()" class="muji-btn w-full mb-4">新增</button>
                 <div id="memoContainer" class="space-y-3"></div>
             </div>
+            
             <div id="list-shop" class="list-content hidden">
-                <div class="flex space-x-2 mb-2">
-                    <input type="text" id="shopInput" class="muji-input" placeholder="想買什麼? 輸入網址會自動變成連結卡片">
-                    <button onclick="addShopItem()" class="muji-btn whitespace-nowrap">新增</button>
-                </div>
-                 <div id="shopContainer" class="space-y-3"></div>
-                 
-                 <div class="mt-8 border-t border-gray-200 pt-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-bold text-muji-accent"><i class="fa-solid fa-image"></i> 圖片筆記</h3>
-                        <label class="text-xs bg-gray-200 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-300">
-                            + 上傳圖片
-                            <input type="file" accept="image/*" multiple class="hidden" onchange="addShopImage(this)">
+                <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100 mb-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <input type="text" id="shopInput" class="muji-input" placeholder="想買什麼?">
+                         <label class="bg-gray-100 p-2 rounded cursor-pointer hover:bg-gray-200 flex-shrink-0 text-muji-secondary w-10 h-10 flex items-center justify-center">
+                            <i class="fa-solid fa-camera"></i>
+                            <input type="file" accept="image/*" class="hidden" onchange="handleShopImagePreview(this)">
                         </label>
                     </div>
-                    <div id="shopImageContainer" class="grid grid-cols-3 gap-2 pb-8"></div>
-                 </div>
+                    <div id="shopImgPreviewArea" class="hidden relative inline-block mb-2">
+                        <div class="w-16 h-16 rounded bg-cover bg-center border border-gray-300" id="shopImgPreviewBox"></div>
+                        <button onclick="clearShopImage()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <button onclick="addShopItem()" class="muji-btn w-full text-sm">新增到清單</button>
+                </div>
+
+                 <div id="shopContainer" class="space-y-3 pb-8"></div>
             </div>
         </div>
 
@@ -414,7 +410,6 @@
             "滑雪準備": ["雪鏡", "排汗衣", "保暖長袖", "手套", "長襪", "防滑鞋", "屁墊", "暖暖包", "護膝", "護手", "冰爪"]
         };
         
-        // --- UPDATED FOOD DATA ---
         const foodData = [
             { 
                 day: "D1 (3/3) 仙台", 
@@ -435,7 +430,6 @@
 
         // --- Core Logic ---
         let currentDayIndex = 0;
-        // UNIQUE KEY for family group to avoid conflicts
         let dayPhotos = JSON.parse(localStorage.getItem('family_trip_photos')) || {}; 
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -483,7 +477,6 @@
             const day = itinerary[index];
             const container = document.getElementById('day-content');
 
-            // Tabs Styling
             document.querySelectorAll('.day-tab').forEach((el, idx) => {
                 if(idx === index) {
                     el.classList.add('active');
@@ -493,13 +486,11 @@
                 }
             });
 
-            // Buttons
             document.getElementById('btnPrev').disabled = (index === 0);
             document.getElementById('btnPrev').style.opacity = (index === 0) ? '0.3' : '1';
             document.getElementById('btnNext').disabled = (index === itinerary.length - 1);
             document.getElementById('btnNext').style.opacity = (index === itinerary.length - 1) ? '0.3' : '1';
 
-            // Events
             let eventsHtml = '';
             day.events.forEach(evt => {
                 if (evt.type === 'html') {
@@ -548,7 +539,6 @@
                 </div>
             `;
             
-            // Render Photos
             renderDayPhotos(index);
             container.animate([{ opacity: 0, transform: 'translateY(5px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 250, easing: 'ease-out' });
         }
@@ -619,7 +609,6 @@
             event.currentTarget.classList.remove('text-muji-secondary'); event.currentTarget.classList.add('text-muji-accent');
             window.scrollTo(0,0);
         }
-        // Updated Map Function to standard Google Maps Search for better compatibility
         function openMap(address) { 
             if(!address) return; 
             window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(address), '_blank'); 
@@ -645,125 +634,111 @@
         // --- Lists Logic (Unique Key) ---
         let userChecklist = JSON.parse(localStorage.getItem('family_checklist')) || {};
         let memoList = JSON.parse(localStorage.getItem('family_memos')) || [];
-        let shopList = JSON.parse(localStorage.getItem('family_shop')) || [];
-        // NEW: Shopping Images Data
-        let shopImages = JSON.parse(localStorage.getItem('family_shop_images')) || [];
+        let shopList = JSON.parse(localStorage.getItem('family_shop_v2')) || []; // Changed key for new structure
+        
+        let currentShopImg = null;
 
-        function initLists() { renderPacking(); renderMemo(); renderShop(); renderShopImages(); }
+        function initLists() { renderPacking(); renderMemo(); renderShop(); }
         function switchListTab(tab) { document.querySelectorAll('.list-tab-btn').forEach(b => { b.classList.remove('bg-muji-accent', 'text-white', 'border-muji-accent'); b.classList.add('bg-white', 'text-gray-500', 'border-muji-border'); }); event.currentTarget.classList.remove('bg-white', 'text-gray-500', 'border-muji-border'); event.currentTarget.classList.add('bg-muji-accent', 'text-white', 'border-muji-accent'); document.querySelectorAll('.list-content').forEach(d => d.classList.add('hidden')); document.getElementById(`list-${tab}`).classList.remove('hidden'); }
         function renderPacking() { let html = ''; for (const [category, items] of Object.entries(packingList)) { html += `<div class="mb-4"><h3 class="font-bold text-muji-accent mb-2">${category}</h3><div class="space-y-2">` + items.map(item => `<label class="flex items-center bg-white p-3 rounded shadow-sm border border-gray-100"><input type="checkbox" class="w-5 h-5 accent-teal-700 mr-3" ${userChecklist[item] ? 'checked' : ''} onchange="toggleCheck('${item}')"><span class="${userChecklist[item] ? 'line-through text-gray-400' : ''}">${item}</span></label>`).join('') + `</div></div>`; } document.getElementById('list-packing').innerHTML = html; }
         function toggleCheck(item) { userChecklist[item] = !userChecklist[item]; localStorage.setItem('family_checklist', JSON.stringify(userChecklist)); renderPacking(); }
         function saveMemo() { const txt = document.getElementById('memoInput').value; if(txt) { memoList.push({ id: Date.now(), text: txt }); localStorage.setItem('family_memos', JSON.stringify(memoList)); document.getElementById('memoInput').value = ''; renderMemo(); } }
         function renderMemo() { document.getElementById('memoContainer').innerHTML = memoList.map(m => `<div class="bg-yellow-50 p-3 rounded shadow-sm border border-yellow-100 text-sm relative"><button onclick="deleteMemo(${m.id})" class="absolute top-1 right-2 text-gray-400"><i class="fa-solid fa-xmark"></i></button><div class="whitespace-pre-wrap pr-4">${m.text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-500 underline">$1</a>')}</div></div>`).join(''); }
         function deleteMemo(id) { memoList = memoList.filter(m => m.id !== id); localStorage.setItem('family_memos', JSON.stringify(memoList)); renderMemo(); }
-        function addShopItem() { const txt = document.getElementById('shopInput').value; if(txt) { let type = 'text'; let meta = ''; const match = txt.match(/(https?:\/\/[^\s]+)/g); if(match) { type = 'link'; try { meta = new URL(match[0]).hostname; } catch(e) { meta = 'Link'; } } shopList.push({ id: Date.now(), text: txt, bought: false, type: type, meta: meta }); localStorage.setItem('family_shop', JSON.stringify(shopList)); document.getElementById('shopInput').value = ''; renderShop(); } }
-        function toggleShop(id) { const idx = shopList.findIndex(i => i.id === id); if(idx > -1) { shopList[idx].bought = !shopList[idx].bought; localStorage.setItem('family_shop', JSON.stringify(shopList)); renderShop(); } }
-        function deleteShopItem(id) { if(confirm('確定刪除此項目?')) { shopList = shopList.filter(i => i.id !== id); localStorage.setItem('family_shop', JSON.stringify(shopList)); renderShop(); } }
-        function renderShop() { document.getElementById('shopContainer').innerHTML = shopList.map(item => { let content = item.type === 'link' ? `<div class="flex-1"><a href="${item.text.match(/(https?:\/\/[^\s]+)/)[0]}" target="_blank" class="block bg-gray-50 border border-gray-200 rounded p-2 mb-1 hover:bg-gray-100"><div class="flex items-center"><div class="w-8 h-8 bg-blue-100 text-blue-500 rounded flex items-center justify-center mr-2 shrink-0"><i class="fa-solid fa-link"></i></div><div class="overflow-hidden"><div class="text-xs font-bold text-gray-500 uppercase truncate">${item.meta}</div><div class="text-sm text-blue-600 truncate">${item.text}</div></div></div></a></div>` : `<span class="${item.bought ? 'line-through text-gray-400' : ''} flex-1">${item.text}</span>`; return `<div class="flex items-start bg-white p-3 rounded shadow-sm border border-gray-100 group"><button onclick="toggleShop(${item.id})" class="mr-3 mt-1 text-xl ${item.bought ? 'text-green-500' : 'text-gray-300'}"><i class="fa-solid ${item.bought ? 'fa-square-check' : 'fa-square'}"></i></button>${content}${item.bought ? '<span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded ml-2 whitespace-nowrap">已購</span>' : ''}<button onclick="deleteShopItem(${item.id})" class="ml-2 mt-1 text-gray-300 hover:text-red-500 p-1"><i class="fa-solid fa-trash"></i></button></div>`; }).join(''); }
-
-        // --- NEW: Shopping Images Logic ---
-        function addShopImage(input) {
-            if (input.files) {
-                const files = Array.from(input.files);
-                let processedCount = 0;
-                files.forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const img = new Image();
-                        img.src = e.target.result;
-                        img.onload = function() {
-                            // Resize to save storage
-                            const canvas = document.createElement('canvas');
-                            const ctx = canvas.getContext('2d');
-                            const MAX_WIDTH = 350;
-                            const scaleSize = MAX_WIDTH / img.width;
-                            canvas.width = MAX_WIDTH;
-                            canvas.height = img.height * scaleSize;
-                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                            
-                            const dataUrl = canvas.toDataURL('image/jpeg', 0.6); // Compress
-                            shopImages.push(dataUrl);
-                            
-                            processedCount++;
-                            if(processedCount === files.length) {
-                                localStorage.setItem('family_shop_images', JSON.stringify(shopImages));
-                                renderShopImages();
-                            }
-                        }
+        
+        // --- Shopping List Logic (Image + Text) ---
+        function handleShopImagePreview(input) {
+            if (input.files && input.files[0]) {
+                const r = new FileReader();
+                r.onload = function (e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const c = document.createElement('canvas');
+                        const ctx = c.getContext('2d');
+                        const s = 400/img.width; 
+                        c.width = 400; 
+                        c.height = img.height * s; 
+                        ctx.drawImage(img, 0, 0, c.width, c.height); 
+                        currentShopImg = c.toDataURL('image/jpeg', 0.6); 
+                        document.getElementById('shopImgPreviewBox').style.backgroundImage = `url(${currentShopImg})`; 
+                        document.getElementById('shopImgPreviewArea').classList.remove('hidden'); 
                     }
-                    reader.readAsDataURL(file);
-                });
+                };
+                r.readAsDataURL(input.files[0]);
             }
         }
 
-       function renderShop() {
-            const container = document.getElementById('shopContainer');
-            
-            // ★ 修改容器樣式：變成 3 欄的網格 (Grid) ★
-            container.className = 'grid grid-cols-3 gap-2 pb-20'; 
+        function clearShopImage() {
+            currentShopImg = null;
+            document.getElementById('shopImgPreviewArea').classList.add('hidden');
+        }
 
-            if (shopList.length === 0) {
-                container.innerHTML = '<div class="col-span-3 text-center text-gray-300 text-sm py-8">暫無購買清單<br>點擊上方新增</div>';
-                return;
-            }
-
-            container.innerHTML = shopList.map(item => {
-                // 1. 處理圖片顯示 (有圖顯示圖，沒圖顯示圖示)
-                let imgContent = '';
-                if (item.img) {
-                    imgContent = `<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url(${item.img})"></div>`;
-                } else {
-                    imgContent = `<div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-300"><i class="fa-solid fa-gift text-2xl"></i></div>`;
-                }
-
-                // 2. 處理「已購」遮罩
-                const boughtOverlay = item.bought 
-                    ? `<div class="absolute inset-0 bg-emerald-600/60 backdrop-blur-[1px] flex items-center justify-center z-10 animate-fade-in"><span class="text-white font-bold text-sm tracking-widest border-2 border-white px-2 py-1 rounded">已購</span></div>`
-                    : '';
-
-                // 3. 處理文字/連結內容
-                let textContent = '';
-                let textAction = ''; // 點擊文字的動作
+        function addShopItem() { 
+            const txt = document.getElementById('shopInput').value; 
+            if(txt) { 
+                let type = 'text'; 
+                let meta = ''; 
+                const match = txt.match(/(https?:\/\/[^\s]+)/g); 
+                if(match) { type = 'link'; try { meta = new URL(match[0]).hostname; } catch(e) { meta = 'Link'; } } 
                 
-                if (item.type === 'link') {
-                    const url = item.text.match(/(https?:\/\/[^\s]+)/)[0];
-                    textContent = `<span class="text-blue-600 underline truncate block"><i class="fa-solid fa-link text-[10px] mr-1"></i>${item.meta}</span>`;
-                    textAction = `onclick="window.open('${url}', '_blank')"`;
+                shopList.push({ 
+                    id: Date.now(), 
+                    text: txt, 
+                    bought: false, 
+                    type: type, 
+                    meta: meta,
+                    img: currentShopImg 
+                }); 
+                
+                localStorage.setItem('family_shop_v2', JSON.stringify(shopList)); 
+                document.getElementById('shopInput').value = ''; 
+                clearShopImage();
+                renderShop(); 
+            } 
+        }
+
+        function toggleShop(id) { 
+            const idx = shopList.findIndex(i => i.id === id); 
+            if(idx > -1) { 
+                shopList[idx].bought = !shopList[idx].bought; 
+                localStorage.setItem('family_shop_v2', JSON.stringify(shopList)); 
+                renderShop(); 
+            } 
+        }
+
+        function deleteShopItem(id) { 
+            if(confirm('確定刪除此項目?')) { 
+                shopList = shopList.filter(i => i.id !== id); 
+                localStorage.setItem('family_shop_v2', JSON.stringify(shopList)); 
+                renderShop(); 
+            } 
+        }
+
+        function renderShop() { 
+            document.getElementById('shopContainer').innerHTML = shopList.map(item => { 
+                let content = '';
+                if(item.type === 'link') {
+                    content = `<div class="flex-1 min-w-0"><a href="${item.text.match(/(https?:\/\/[^\s]+)/)[0]}" target="_blank" class="block bg-gray-50 border border-gray-200 rounded p-2 mb-1 hover:bg-gray-100"><div class="flex items-center"><div class="w-8 h-8 bg-blue-100 text-blue-500 rounded flex items-center justify-center mr-2 shrink-0"><i class="fa-solid fa-link"></i></div><div class="overflow-hidden"><div class="text-xs font-bold text-gray-500 uppercase truncate">${item.meta}</div><div class="text-sm text-blue-600 truncate">${item.text}</div></div></div></a></div>`;
                 } else {
-                    textContent = `<span class="truncate block text-gray-600">${item.text}</span>`;
+                    content = `<span class="${item.bought ? 'line-through text-gray-400' : ''} flex-1 min-w-0 break-words">${item.text}</span>`;
                 }
+                
+                const imgHtml = item.img ? `<div onclick="showFullImg('${item.img}')" class="w-16 h-16 bg-cover bg-center rounded-lg border border-gray-200 mr-3 flex-shrink-0" style="background-image: url(${item.img})"></div>` : '';
 
-                // 4. 組合卡片 HTML
                 return `
-                    <div class="relative group bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm flex flex-col aspect-[3/4]">
-                        
-                        <button onclick="deleteShopItem(${item.id})" class="absolute top-1 right-1 z-20 bg-white/80 hover:bg-red-500 hover:text-white text-gray-400 rounded-full w-6 h-6 flex items-center justify-center shadow-sm transition-colors">
-                            <i class="fa-solid fa-xmark text-xs"></i>
-                        </button>
-
-                        <div onclick="toggleShop(${item.id})" class="relative flex-1 cursor-pointer overflow-hidden border-b border-gray-100">
-                            ${imgContent}
-                            ${boughtOverlay}
-                            <div class="absolute bottom-1 right-1 z-10 text-white drop-shadow-md text-sm ${item.bought ? 'hidden' : 'opacity-50'}">
-                                <i class="fa-regular fa-circle-check"></i>
-                            </div>
-                        </div>
-
-                        <div ${textAction} class="p-2 h-10 flex items-center bg-white text-[11px] font-medium leading-tight cursor-pointer hover:bg-gray-50">
-                            ${textContent}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        }
-
-        function deleteShopImage(idx) {
-            if(confirm('刪除這張圖片？')) {
-                shopImages.splice(idx, 1);
-                localStorage.setItem('family_shop_images', JSON.stringify(shopImages));
-                renderShopImages();
-            }
+                <div class="flex items-start bg-white p-3 rounded shadow-sm border border-gray-100 group">
+                    <button onclick="toggleShop(${item.id})" class="mr-3 mt-1 text-xl ${item.bought ? 'text-green-500' : 'text-gray-300'} flex-shrink-0">
+                        <i class="fa-solid ${item.bought ? 'fa-square-check' : 'fa-square'}"></i>
+                    </button>
+                    ${imgHtml}
+                    ${content}
+                    ${item.bought ? '<span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded ml-2 whitespace-nowrap flex-shrink-0">已購</span>' : ''}
+                    <button onclick="deleteShopItem(${item.id})" class="ml-2 mt-1 text-gray-300 hover:text-red-500 p-1 flex-shrink-0">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>`; 
+            }).join(''); 
         }
 
         // --- Info & Food Logic (Unique Key) ---
