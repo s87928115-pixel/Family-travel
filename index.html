@@ -371,6 +371,7 @@
 
     <script>
         // --- SENDAI SELF-DRIVE ITINERARY (4 DAYS) ---
+        // UPDATED based on request
         const itinerary = [
             { 
                 day: 1, date: "3/3 (二)", title: "仙台合流 & 晚餐", icon: "fa-plane-arrival", 
@@ -379,7 +380,7 @@
                     { time: "11:50", title: "星宇 JX862 出發", note: "桃園機場起飛", type: "flight", highlight: true },
                     { time: "16:00", title: "抵達仙台機場", type: "flight" },
                     { time: "17:30", title: "仙台車站會合", note: "與本隊會合", type: "activity", highlight: true },
-                    { time: "18:30", title: "晚餐: 肉十八", type: "food" }
+                    { time: "19:30", title: "晚餐: 肉十八", type: "food" }
                 ] 
             },
             { 
@@ -395,13 +396,15 @@
                 ] 
             },
             { 
-                day: 3, date: "3/5 (四)", title: "銀山溫泉 & 松島", icon: "fa-spa", 
-                weather: { text: "山形/松島 陰 3~8°C", icon: "fa-cloud", link: "Yamagata" }, 
+                day: 3, date: "3/5 (四)", title: "銀山溫泉 & 購物", icon: "fa-spa", 
+                weather: { text: "山形 陰 3~8°C", icon: "fa-cloud", link: "Yamagata" }, 
                 events: [
-                    { time: "09:10", title: "道の駅 天童温泉", type: "shop" }, 
-                    { time: "10:40", title: "銀山溫泉接駁", note: "大正浪漫館搭車", type: "bus", highlight: true }, 
-                    { time: "16:00", title: "松島海岸", type: "sight" }, 
-                    { time: "18:00", title: "三井 OUTLET 仙台港", type: "shop" }
+                    { time: "08:20", title: "出門", type: "activity" },
+                    { time: "10:10", title: "大正浪漫館", address: "Ginzan Onsen Taisho Romankan", type: "sight", highlight: true }, 
+                    { time: "10:20", title: "銀山溫泉接駁", note: "前往銀山溫泉", type: "bus" }, 
+                    { time: "13:00", title: "回程接駁車", note: "返回浪漫館", type: "bus" }, 
+                    { time: "14:30", title: "あ･ら･伊達な道の駅", address: "Ala Datena Michinoeki", type: "shop" },
+                    { time: "16:30", title: "三井 OUTLET 仙台港", address: "Mitsui Outlet Park Sendai Port", type: "shop" }
                 ] 
             },
             { 
@@ -630,6 +633,7 @@
         }
         function openMap(address) { 
             if(!address) return; 
+            // Use standard Google Maps search URL
             window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(address), '_blank'); 
         }
         function openWeather(loc) { window.open(`https://www.google.com/search?q=weather+${loc}+japan`, '_blank'); }
