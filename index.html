@@ -13,7 +13,6 @@
     <script>
         (function() {
             try {
-                // 更新為 v15
                 const data = JSON.parse(localStorage.getItem('travelApp_TaiBaoLe_Final_v15'));
                 const iconUrl = (data && data.info && data.info.coverImg) ? data.info.coverImg : 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=192&q=80';
                 
@@ -311,7 +310,7 @@
             </div>
         </section>
 
-        <!-- ================= 5. INFO 資訊 (含 Google My Maps) ================= -->
+        <!-- ================= 5. INFO 資訊 ================= -->
         <section id="tab-info" class="tab-content animate-fade-in">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-zen font-bold text-warmbrown pl-2 border-l-4 border-warmbrown">旅途重要資訊</h2>
@@ -321,9 +320,7 @@
             <!-- 總覽地圖 (Google My Maps iframe) -->
             <div class="muji-card p-4 mb-6 bg-white overflow-hidden" id="infoMapContainerView">
                 <h3 class="font-zen font-bold text-calmblue pb-2 mb-3 text-xl px-2"><i class="fas fa-map-marked-alt mr-2"></i>專屬旅遊地圖</h3>
-                <div class="rounded-xl overflow-hidden border border-gray-200" id="iframeWrapper">
-                    <!-- Iframe 將動態渲染於此 -->
-                </div>
+                <div class="rounded-xl overflow-hidden border border-gray-200" id="iframeWrapper"></div>
             </div>
 
             <!-- 線上專屬連結 -->
@@ -352,7 +349,6 @@
                 </div>
             </div>
 
-            <!-- 住宿與航班 -->
             <div class="space-y-6" id="infoContainer"></div>
 
             <div class="muji-card p-6 mt-8 border-t-4 border-calmblue hidden" id="infoSettingsContainer">
@@ -772,7 +768,7 @@
         }
     }
 
-    /* ================= 2. FOOD 模組 ================= */
+    /* ================= 2. FOOD 美食 ================= */
     let isFoodEditing = false;
 
     function renderFood() {
