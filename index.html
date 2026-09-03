@@ -9,11 +9,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="泰飽了要走走">
 
+    <!-- PWA & Apple Touch Icon 動態寫入腳本 -->
     <script>
         (function() {
             try {
-                // 更新為 v14 以確保載入最新行程
-                const data = JSON.parse(localStorage.getItem('travelApp_TaiBaoLe_Final_v14'));
+                // 更新為 v15
+                const data = JSON.parse(localStorage.getItem('travelApp_TaiBaoLe_Final_v15'));
                 const iconUrl = (data && data.info && data.info.coverImg) ? data.info.coverImg : 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=192&q=80';
                 
                 const appleLink = document.createElement('link');
@@ -29,12 +30,15 @@
         })();
     </script>
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
     
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -76,7 +80,6 @@
         .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(140, 118, 103, 0.1); }
         input[type="file"] { display: none; }
         
-        /* 時間軸樣式 */
         .timeline-line { position: absolute; left: 15px; top: 20px; bottom: 0; width: 2px; background-color: rgba(140, 118, 103, 0.2); z-index: 0; }
         .timeline-dot { position: absolute; left: 11px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background-color: #D9534F; z-index: 1; border: 2px solid #FFF; box-shadow: 0 0 0 2px #D9534F; }
     </style>
@@ -84,6 +87,7 @@
 <body class="font-noto text-lg text-darkwood selection:bg-warmbrown/30">
 
 <div class="max-w-md mx-auto min-h-screen relative shadow-2xl bg-beige overflow-hidden flex flex-col pb-safe">
+    <!-- Header -->
     <header class="relative w-full h-48 bg-gray-200 shrink-0">
         <img id="headerCoverImg" src="" class="w-full h-full object-cover" alt="Cover">
         <div class="absolute inset-0 bg-gradient-to-t from-darkwood/70 via-darkwood/20 to-transparent"></div>
@@ -93,8 +97,10 @@
         </div>
     </header>
 
+    <!-- Main Content Area -->
     <main class="flex-1 overflow-y-auto no-scrollbar p-4 relative" id="mainContainer">
         
+        <!-- ================= 1. PLAN 行程 ================= -->
         <section id="tab-plan" class="tab-content active animate-fade-in">
             <div class="flex overflow-x-auto no-scrollbar gap-3 mb-5" id="planDaySelector"></div>
             
@@ -111,6 +117,7 @@
             <button onclick="openPlanModal()" class="w-full mt-6 py-4 border-2 border-dashed border-warmbrown/40 text-warmbrown font-bold text-[1.1rem] rounded-xl bg-white hover:bg-warmbrown/5 transition active:scale-[0.98]"><i class="fas fa-plus mr-2"></i>新增行程</button>
         </section>
 
+        <!-- 行程編輯/新增 Modal -->
         <div id="planModal" class="fixed inset-0 bg-darkwood/60 z-50 hidden flex flex-col justify-end backdrop-blur-sm">
             <div class="bg-beige w-full max-w-md mx-auto rounded-t-3xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto animate-slide-up">
                 <button onclick="closePlanModal()" class="absolute top-5 right-5 text-gray-400 hover:text-darkwood text-2xl transition"><i class="fas fa-times"></i></button>
@@ -123,8 +130,7 @@
                     </div>
                     <div>
                         <label class="block text-[1rem] font-bold mb-2 text-calmblue">行程內容 / 網址 (必填)</label>
-                        <textarea id="planItemText" rows="5" placeholder="輸入細節，若有網址會自動轉成按鈕。
-若以「備註：」開頭，字體會自動變小！" class="w-full p-4 border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-warmbrown text-[1.1rem] leading-relaxed transition shadow-inner"></textarea>
+                        <textarea id="planItemText" rows="5" placeholder="輸入細節，若有網址會自動轉成按鈕。&#10;若以「備註：」開頭，字體會自動變小！" class="w-full p-4 border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-warmbrown text-[1.1rem] leading-relaxed transition shadow-inner"></textarea>
                     </div>
                     <div>
                         <label class="block text-[1rem] font-bold mb-2 text-calmblue">附加照片 (選填)</label>
@@ -142,12 +148,14 @@
             </div>
         </div>
 
+        <!-- ================= 2. FOOD 美食 ================= -->
         <section id="tab-food" class="tab-content animate-fade-in">
             <div class="flex justify-between items-center mb-5 pl-2 border-l-4 border-warmbrown">
                 <h2 class="text-2xl font-zen font-bold text-warmbrown">曼谷美食地圖</h2>
                 <button onclick="toggleFoodEditMode()" id="foodEditBtn" class="text-sm bg-warmbrown text-white px-4 py-2 rounded-full shadow-sm font-bold active:scale-95 transition"><i class="fas fa-image mr-1"></i>管理美食照片</button>
             </div>
 
+            <!-- 新增美食表單 -->
             <div class="muji-card p-5 mb-6 bg-beige/50 border border-warmbrown/10">
                 <h3 class="font-zen font-bold text-calmblue mb-3 text-[1.1rem]"><i class="fas fa-plus-circle mr-2"></i>新增餐廳/景點</h3>
                 <div class="space-y-3">
@@ -162,12 +170,14 @@
             <div id="foodContainer" class="space-y-6"></div>
         </section>
 
+        <!-- ================= 3. WALLET 記帳 (含進階分帳系統) ================= -->
         <section id="tab-wallet" class="tab-content animate-fade-in">
             <div class="flex bg-white rounded-full p-1.5 shadow-sm mb-6 font-zen text-[1rem] border border-warmbrown/10">
                 <button onclick="switchWalletTab('expense')" id="wallet-tab-expense" class="flex-1 py-3 rounded-full font-bold bg-warmbrown text-white transition">記帳明細</button>
                 <button onclick="switchWalletTab('split')" id="wallet-tab-split" class="flex-1 py-3 rounded-full font-bold text-warmbrown transition">分帳結算</button>
             </div>
 
+            <!-- A. 記帳明細區塊 -->
             <div id="wallet-view-expense" class="animate-fade-in">
                 <div class="muji-card p-6 mb-6 bg-warmbrown/5 border-none">
                     <h3 class="font-zen font-bold text-warmbrown mb-4 text-xl"><i class="fas fa-calculator mr-2"></i>匯率計算機</h3>
@@ -214,6 +224,7 @@
                 </div>
             </div>
 
+            <!-- B. 分帳結算區塊 -->
             <div id="wallet-view-split" class="hidden animate-fade-in">
                 <div class="muji-card p-6 mb-6 bg-gradient-to-br from-calmblue to-blue-800 text-white border-none shadow-lg relative overflow-hidden">
                     <div class="absolute top-0 right-0 opacity-10 text-8xl transform translate-x-4 -translate-y-4"><i class="fas fa-handshake"></i></div>
@@ -239,6 +250,7 @@
             </div>
         </section>
 
+        <!-- ================= 4. LISTS 清單 ================= -->
         <section id="tab-lists" class="tab-content animate-fade-in">
             <div class="flex bg-white rounded-full p-1.5 shadow-sm mb-6 font-zen text-[1rem] border border-warmbrown/10">
                 <button onclick="switchListTab('baggage')" id="subtab-baggage" class="flex-1 py-3 rounded-full font-bold bg-warmbrown text-white transition">行李確認</button>
@@ -246,6 +258,7 @@
                 <button onclick="switchListTab('shop')" id="subtab-shop" class="flex-1 py-3 rounded-full font-bold text-warmbrown transition">採購型錄</button>
             </div>
 
+            <!-- 行李 -->
             <div id="list-baggage" class="muji-card p-6 animate-fade-in">
                 <div class="flex gap-3 mb-6">
                     <input type="text" id="baggageInput" placeholder="輸入要帶的物品..." class="flex-1 p-4 border border-gray-200 rounded-xl bg-beige/30 focus:bg-white text-[1.1rem] transition shadow-inner">
@@ -254,6 +267,7 @@
                 <div id="baggageList" class="space-y-2"></div>
             </div>
 
+            <!-- 備忘錄 -->
             <div id="list-memo" class="hidden animate-fade-in">
                 <div class="muji-card p-6 mb-5 relative">
                     <div class="flex justify-between items-center mb-4 pb-3 border-b border-warmbrown/10">
@@ -278,6 +292,7 @@
                 </div>
             </div>
 
+            <!-- 採購型錄 -->
             <div id="list-shop" class="hidden animate-fade-in">
                 <div class="muji-card p-5 mb-6 bg-beige/30 border-dashed border-2 border-warmbrown/30">
                     <div class="flex flex-col gap-3">
@@ -296,17 +311,27 @@
             </div>
         </section>
 
+        <!-- ================= 5. INFO 資訊 (含 Google My Maps) ================= -->
         <section id="tab-info" class="tab-content animate-fade-in">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-zen font-bold text-warmbrown pl-2 border-l-4 border-warmbrown">旅途重要資訊</h2>
                 <button onclick="toggleInfoEdit()" id="infoEditBtn" class="text-[1rem] bg-warmbrown text-white px-5 py-2 rounded-full shadow-sm font-bold active:scale-95 transition"><i class="fas fa-pen mr-1"></i>修改資料</button>
             </div>
 
-            <div class="muji-card p-6 mb-6 bg-white border-l-4 border-calmblue">
+            <!-- 總覽地圖 (Google My Maps iframe) -->
+            <div class="muji-card p-4 mb-6 bg-white overflow-hidden" id="infoMapContainerView">
+                <h3 class="font-zen font-bold text-calmblue pb-2 mb-3 text-xl px-2"><i class="fas fa-map-marked-alt mr-2"></i>專屬旅遊地圖</h3>
+                <div class="rounded-xl overflow-hidden border border-gray-200" id="iframeWrapper">
+                    <!-- Iframe 將動態渲染於此 -->
+                </div>
+            </div>
+
+            <!-- 線上專屬連結 -->
+            <div class="muji-card p-6 mb-6 bg-white border-l-4 border-calmblue" id="infoLinksContainer">
                 <h3 class="font-zen font-bold text-calmblue border-b border-calmblue/20 pb-3 mb-4 text-xl"><i class="fas fa-link mr-2"></i>線上專屬連結</h3>
                 <div class="flex flex-col gap-3">
                     <a href="https://s87928115-pixel.github.io/photo/" target="_blank" class="block w-full bg-calmblue text-white text-center py-3.5 rounded-xl font-bold text-[1.1rem] shadow-md hover:bg-calmblue/90 active:scale-95 transition">
-                        <i class="fas fa-map-location-dot mr-2"></i>線上地圖與相簿
+                        <i class="fas fa-images mr-2"></i>線上地圖與相簿
                     </a>
                     <a href="https://s87928115-pixel.github.io/speak/" target="_blank" class="block w-full bg-warmbrown text-white text-center py-3.5 rounded-xl font-bold text-[1.1rem] shadow-md hover:bg-warmbrown/90 active:scale-95 transition">
                         <i class="fas fa-comments mr-2"></i>開啟專屬對話
@@ -314,6 +339,7 @@
                 </div>
             </div>
 
+            <!-- 入境 QR Code 專區 -->
             <div class="muji-card p-6 mb-6 bg-gradient-to-br from-white to-beige/50">
                 <h3 class="font-zen font-bold text-warmbrown border-b border-warmbrown/20 pb-3 mb-5 text-xl"><i class="fas fa-qrcode mr-2"></i>入境 QR Code / 簽證</h3>
                 <div class="flex flex-col items-center">
@@ -326,9 +352,10 @@
                 </div>
             </div>
 
+            <!-- 住宿與航班 -->
             <div class="space-y-6" id="infoContainer"></div>
 
-            <div class="muji-card p-6 mt-8 border-t-4 border-calmblue">
+            <div class="muji-card p-6 mt-8 border-t-4 border-calmblue hidden" id="infoSettingsContainer">
                 <h3 class="font-zen font-bold text-calmblue mb-5 text-xl"><i class="fas fa-palette mr-2"></i>外觀設定</h3>
                 <label class="block w-full text-center bg-beige border-2 border-dashed border-warmbrown/40 text-warmbrown py-5 rounded-xl cursor-pointer font-bold transition hover:bg-warmbrown/10 active:scale-95 text-[1.1rem]">
                     <i class="fas fa-image mr-2"></i>自訂首頁封面照片
@@ -340,6 +367,7 @@
 
     </main>
 
+    <!-- Bottom Navigation -->
     <nav class="glass-nav absolute bottom-0 w-full h-[5rem] flex justify-around items-center z-40 rounded-t-3xl shadow-[0_-10px_40px_rgba(74,62,61,0.08)] px-2 pb-safe">
         <button onclick="switchTab('plan', this)" class="nav-btn active flex flex-col items-center justify-center w-16 h-full text-warmbrown transform transition active:scale-90">
             <i class="fas fa-calendar-alt text-2xl mb-1"></i>
@@ -371,7 +399,8 @@
         info: {
             flight: "【去程】\n09:25 班次 JX741 到達BKK時間12:35\n\n【阿姨回程】\n13:45 班次 JX742 到達TPE時間18:25\n\n【其他人回程】\n17:40 班次 JX746 到達TPE時間22:30",
             acc: "【民宿】House36 Ekkamai\nhttps://maps.app.goo.gl/3WZ1nSZvPJKmALZ96\n\n【飯店】Somerset Ekamai Bangkok\nhttps://maps.app.goo.gl/LM8E4JM69iX4pvDf9",
-            qrCodeImg: "" 
+            qrCodeImg: "",
+            mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d124041.51733519808!2d100.47043813876024!3d13.724441586523098!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d6032280d61f3%3A0x10100b25de24820!2z5p285ZyL5pu86LC3!5e0!3m2!1szh-TW!2stw!4v1700000000000!5m2!1szh-TW!2stw"
         },
         plan: [
             {
@@ -389,10 +418,10 @@
             {
                 day: "DAY 2", date: "11/20",
                 items: [
-                    { id: 201, time: "07:30", text: "Ekkamai Wat That Thong 集合", img: "" },
+                    { id: 201, time: "07:30", text: "Ekkamai Wat That Thong 集合\nhttps://maps.app.goo.gl/qzKWc1KmnyTDrhu39", img: "" },
                     { id: 202, time: "08:00", text: "搭乘園方專車 ➔ 大象保護區 (體驗約4小時，含午餐)", img: "" },
                     { id: 203, time: "14:30", text: "從園區出發回程 (車程約 1.5 小時)", img: "" },
-                    { id: 204, time: "16:30", text: "centralwOrld https://maps.app.goo.gl/SDVcTB8YE19sMxZt8 逛街，或前往班嘉奇蒂公園 https://maps.app.goo.gl/Z6hwvV6rANZxqhPr7 走森林天空步道", img: "" },
+                    { id: 204, time: "16:30", text: "centralwOrld https://maps.app.goo.gl/SDVcTB8YE19sMxZt8 逛街，或前往班嘉奇蒂公園 https://maps.app.goo.gl/Z6hwvV6rANZxqhPr7 走森林天空步道\n*備註：One More Thai Massage按摩店\nhttps://maps.app.goo.gl/ESigr1CT9JXpuv3J7\nChandee Head Spa & Massage\nhttps://maps.app.goo.gl/GtaBSvvYp6KEXqoe8", img: "" },
                     { id: 205, time: "18:30", text: "享用道地泰式料理晚餐", img: "" }
                 ]
             },
@@ -494,20 +523,17 @@
         }
     };
 
-    const STORAGE_KEY = 'travelApp_TaiBaoLe_Final_v14'; 
+    const STORAGE_KEY = 'travelApp_TaiBaoLe_Final_v15'; 
     
     function loadData() {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
             let data = JSON.parse(stored);
-            if (!data.wallet.members) {
-                data.wallet.members = [{ id: Date.now(), name: "自己", hasPaid: true }];
-            }
+            if (!data.wallet.members) data.wallet.members = [{ id: Date.now(), name: "自己", hasPaid: true }];
+            if (!data.info.mapEmbedUrl) data.info.mapEmbedUrl = initialData.info.mapEmbedUrl;
             data.wallet.expenses.forEach(e => {
                 if (e.isShared === undefined) e.isShared = true;
-                if (e.isShared && !e.sharedBy) {
-                    e.sharedBy = data.wallet.members.map(m => m.id);
-                }
+                if (e.isShared && !e.sharedBy) e.sharedBy = data.wallet.members.map(m => m.id);
             });
             return data;
         } else {
@@ -531,7 +557,6 @@
     let appData = loadData();
     let currentPlanIndex = 0;
     
-    // 圖片 Canvas 壓縮
     function compressImage(file, callback) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -556,19 +581,15 @@
         reader.readAsDataURL(file);
     }
 
-    // 文字解析：自動轉換連結與標示備註
     function parseText(text) {
         if (!text) return "";
-        let parsed = text.replace(/</g, "<").replace(/>/g, ">");
-        
+        let parsed = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         parsed = parsed.replace(/(\*?備註[：:].*)/g, '<span class="text-[0.95rem] text-gray-500 block mt-1 leading-normal">$1</span>');
         parsed = parsed.replace(/(\b\d{1,2}:\d{2}\b)/g, '<span class="text-highlight font-bold font-zen">$1</span>');
-
         const urlRegex = /(https?:\/\/[^\s\)]+)/g;
         parsed = parsed.replace(urlRegex, function(url) {
             return `<br><a href="${url}" target="_blank" class="inline-block my-1.5 px-4 py-2 bg-calmblue/10 text-calmblue border border-calmblue/30 rounded-full text-[0.95rem] font-bold no-underline active:bg-calmblue/20 transition shadow-sm"><i class="fas fa-map-marker-alt mr-1"></i> 開啟地圖/連結</a>`;
         });
-        
         return parsed;
     }
 
@@ -1263,9 +1284,24 @@
             uploadLabel.classList.remove('hidden');
         }
 
+        const mapUrl = appData.info.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d124041.51733519808!2d100.47043813876024!3d13.724441586523098!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d6032280d61f3%3A0x10100b25de24820!2z5p285ZyL5pu86LC3!5e0!3m2!1szh-TW!2stw!4v1700000000000!5m2!1szh-TW!2stw";
+
         const container = document.getElementById('infoContainer');
+        const mapContainerView = document.getElementById('infoMapContainerView');
+        const settingsContainer = document.getElementById('infoSettingsContainer');
+        const linksContainer = document.getElementById('infoLinksContainer');
+        
         if (isInfoEditing) {
+            mapContainerView.classList.add('hidden');
+            linksContainer.classList.add('hidden');
+            settingsContainer.classList.remove('hidden');
+
             container.innerHTML = `
+                <div class="muji-card p-6">
+                    <h3 class="font-zen font-bold text-warmbrown mb-3 text-[1.2rem]"><i class="fas fa-map mr-2"></i>My Maps 嵌入網址</h3>
+                    <input type="text" id="editInfoMapUrl" value="${mapUrl}" class="w-full p-4 border border-warmbrown/30 rounded-xl bg-beige/30 text-[1rem] shadow-inner" placeholder="請貼上 Google My Maps 嵌入用的 iframe src 網址...">
+                    <p class="text-xs text-gray-400 mt-2">在 Google 我的地圖中選擇「嵌入我的網站」，將裡面 src="..." 的網址貼在這裡即可。</p>
+                </div>
                 <div class="muji-card p-6">
                     <h3 class="font-zen font-bold text-warmbrown mb-3 text-[1.2rem]"><i class="fas fa-plane mr-2"></i>航班資訊</h3>
                     <textarea id="editInfoFlight" class="w-full h-40 p-4 border border-warmbrown/30 rounded-xl bg-beige/30 text-[1.1rem] leading-relaxed shadow-inner">${appData.info.flight}</textarea>
@@ -1278,6 +1314,12 @@
             document.getElementById('infoEditBtn').innerHTML = '<i class="fas fa-save mr-1"></i>儲存修改';
             document.getElementById('infoEditBtn').classList.replace('bg-warmbrown', 'bg-calmblue');
         } else {
+            mapContainerView.classList.remove('hidden');
+            linksContainer.classList.remove('hidden');
+            settingsContainer.classList.add('hidden');
+            
+            document.getElementById('iframeWrapper').innerHTML = `<iframe src="${mapUrl}" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+
             container.innerHTML = `
                 <div class="muji-card p-6">
                     <h3 class="font-zen font-bold text-warmbrown border-b border-warmbrown/20 pb-2 mb-4 text-[1.2rem]"><i class="fas fa-plane mr-2"></i>航班時刻</h3>
@@ -1299,6 +1341,7 @@
         if (isInfoEditing) {
             appData.info.flight = document.getElementById('editInfoFlight').value;
             appData.info.acc = document.getElementById('editInfoAcc').value;
+            appData.info.mapEmbedUrl = document.getElementById('editInfoMapUrl').value.trim();
             saveData(appData);
         }
         isInfoEditing = !isInfoEditing;
@@ -1346,13 +1389,12 @@
     window.onload = () => {
         renderPlan();
         renderFood();
-        renderWallet();
+        renderWallet(); 
         renderBaggage();
         renderMemo();
         renderShop();
         renderInfo();
     };
-
 </script>
 </body>
 </html>
